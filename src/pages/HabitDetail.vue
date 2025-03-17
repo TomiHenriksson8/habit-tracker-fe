@@ -30,16 +30,17 @@
 import { useRouter, useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useHabits } from "../hooks/useHabits";
+import type { Habit } from "../hooks/useHabits.ts";
 
 const { fetchHabits, deleteHabit, habits } = useHabits();
 const router = useRouter();
 const route = useRoute();
 
-const habit = ref(null);
+const habit = ref<Habit | null>(null);
 
 onMounted(() => {
   fetchHabits();
-  habit.value = habits.value.find((h) => h._id === route.params.id) || null;
+  habit.value = habits.value.find((h) => h._id === route.params.id) ?? null;
 });
 
 // Delete habit and go back

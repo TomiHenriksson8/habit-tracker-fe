@@ -193,7 +193,7 @@ const saveHabit = async () => {
 
   await addHabit({
     title: habitData.value.title,
-    description: habitData.value.description || null,
+    description: habitData.value.description || undefined,
     frequency: habitData.value.frequency,
     created_at: dayjs().toISOString(),
   });

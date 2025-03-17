@@ -4,7 +4,10 @@ import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import AddHabit from "../components/AddHabit.vue";
 import HabitDetail from "../pages/HabitDetail.vue";
-import Profile from "../pages/Profile.vue";
+import { defineAsyncComponent } from "vue";
+
+const Profile = defineAsyncComponent(() => import("../pages/Profile.vue"));
+
 const routes = [
   { path: "/", component: HabitPage },
   { path: "/add-habit", component: AddHabit },

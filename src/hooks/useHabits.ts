@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
-interface Habit {
+export interface Habit {
   _id: string;
   title: string;
   description?: string;
@@ -91,8 +91,9 @@ export function useHabits() {
 
   const addHabit = async (habit: {
     title: string;
-    description?: string;
+    description?: string | undefined;
     frequency: string;
+    created_at?: string;
   }) => {
     if (!user.value) {
       error.value = "User not logged in.";

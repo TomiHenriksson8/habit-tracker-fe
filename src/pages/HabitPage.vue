@@ -289,6 +289,7 @@ import { useRouter } from "vue-router";
 import { onMounted, watch, ref, computed } from "vue";
 import { useHabits } from "../hooks/useHabits";
 import { useUser } from "../hooks/useUser";
+import type { Habit } from "../hooks/useHabits.ts";
 import Chart from "chart.js/auto";
 
 const {
@@ -365,7 +366,7 @@ const completeHabitAndUpdate = async (habitId: string) => {
   // ✅ Find the habit and update UI immediately
   const habit = habits.value.find((h) => h._id === habitId);
   if (habit) {
-    const maxCount = getMaxCompletion(habit.frequency);
+    const maxCount = Number(getMaxCompletion(habit.frequency));
     habit.completed = habit.completion_count >= maxCount;
     console.log("🔹 UI updated locally.");
   }
@@ -519,10 +520,9 @@ const longestStreak = computed(() => {
 
   // Extract only the completion dates of all habits
   const completionDates = completedHabits.value
-    .map((habit) => habit.completedAt) // Assuming `completedAt` exists
-    .filter((date) => date) // Remove any null/undefined values
-    .map((date) => new Date(date).toISOString().split("T")[0]); // Normalize to YYYY-MM-DD
-
+    .map((habit) => habit.last_completed) // Assuming `completedAt` exists
+    .filter((date): date is string => !!date) // ✅ Remove null/undefined values
+    .map((date) => new Date(date).toISOString().split("T")[0]);
   // Sort the dates in ascending order
   completionDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -585,7 +585,7 @@ const getHabitIcon = (title: string) => {
 };
 
 // **Restart a completed habit**
-const restartHabit = async (habit) => {
+const restartHabit = async (habit: Habit) => {
   await addHabit({
     title: habit.title,
     description: habit.description,
