@@ -518,17 +518,22 @@ const totalCompletedHabits = computed(() => completedHabits.value.length);
 const longestStreak = computed(() => {
   if (!completedHabits.value.length) return 0;
 
-  // Extract only the completion dates of all habits
   const completionDates = completedHabits.value
-    .map((habit) => habit.last_completed) // Assuming `completedAt` exists
+    .map((habit) => habit.last_completed)
     .filter((date): date is string => !!date) // ✅ Remove null/undefined values
-    .map((date) => new Date(date).toISOString().split("T")[0]);
-  // Sort the dates in ascending order
+    .map((date) => {
+      const parsedDate = new Date(date);
+      return isNaN(parsedDate.getTime())
+        ? null
+        : parsedDate.toISOString().split("T")[0]; // ✅ Handle invalid dates
+    })
+    .filter((date): date is string => !!date); // ✅ Remove any `null` values
+
+  // Sort dates in ascending order
   completionDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   let maxStreak = 0;
   let currentStreak = 1;
-
   for (let i = 1; i < completionDates.length; i++) {
     const prevDate = new Date(completionDates[i - 1]);
     const currDate = new Date(completionDates[i]);

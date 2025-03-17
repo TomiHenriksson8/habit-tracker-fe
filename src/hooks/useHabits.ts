@@ -107,10 +107,12 @@ export function useHabits() {
         userId: user.value.id,
         completed: false,
         completion_count: 0, // ✅ Initialize to zero
-        created_at: new Date().toISOString(), // Add created_at timestamp
+        created_at:
+          habit.created_at && !isNaN(Date.parse(habit.created_at))
+            ? habit.created_at
+            : new Date().toISOString(), // ✅ Ensure a valid date
         completion_history: [],
       });
-
       habits.value.push({
         ...response.data,
         _id: response.data._id.$oid,
