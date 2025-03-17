@@ -2,6 +2,7 @@ import { ref } from "vue";
 import apiClient from "./useApi";
 
 interface User {
+  id: string;
   username: string;
   email: string;
 }
